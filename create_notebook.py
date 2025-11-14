@@ -1,0 +1,234 @@
+﻿import json
+
+notebook_content = {
+    "cells": [
+        {
+            "cell_type": "markdown",
+            "metadata": {},
+            "source": [
+                "# Hospital Readmission Prediction - Model Training and Evaluation\n",
+                "This notebook contains the complete model training pipeline."
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Import required libraries\n",
+                "import os\n",
+                "import pandas as pd\n",
+                "import numpy as np\n",
+                "from datetime import datetime\n",
+                "import json\n",
+                "import warnings\n",
+                "warnings.filterwarnings('ignore')\n",
+                "\n",
+                "print('✅ Libraries imported successfully')"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Initialize Spark Session\n",
+                "from pyspark.sql import SparkSession\n",
+                "\n",
+                "spark = SparkSession.builder \\\n",
+                "    .appName(\"HospitalReadmissionPrediction\") \\\n",
+                "    .config(\"spark.sql.adaptive.enabled\", \"true\") \\\n",
+                "    .getOrCreate()\n",
+                "\n",
+                "print(f\"✅ Spark Session initialized\")\n",
+                "print(f\"Spark Version: {spark.version}\")"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Load preprocessed data\n",
+                "processed_data_path = \"../data/processed/diabetes_processed.csv\"\n",
+                "\n",
+                "if os.path.exists(processed_data_path):\n",
+                "    df_spark = spark.read.csv(processed_data_path, header=True, inferSchema=True)\n",
+                "    print(f\"✅ Data loaded: {df_spark.count()} rows, {len(df_spark.columns)} columns\")\n",
+                "    df_spark.show(5)\n",
+                "else:\n",
+                "    print(f\"❌ File not found: {processed_data_path}\")\n",
+                "    print(\"Please run the data preprocessing notebook first\")"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Prepare features and target\n",
+                "target_col = 'readmitted'\n",
+                "feature_cols = [col for col in df_spark.columns if col != target_col]\n",
+                "\n",
+                "print(f\"Target column: {target_col}\")\n",
+                "print(f\"Feature columns ({len(feature_cols)}): {feature_cols[:5]}...\")\n",
+                "\n",
+                "# Check target distribution\n",
+                "df_spark.groupBy(target_col).count().show()"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Create feature vector\n",
+                "from pyspark.ml.feature import VectorAssembler\n",
+                "\n",
+                "assembler = VectorAssembler(\n",
+                "    inputCols=feature_cols,\n",
+                "    outputCol=\"features\",\n",
+                "    handleInvalid=\"skip\"\n",
+                ")\n",
+                "\n",
+                "df_features = assembler.transform(df_spark)\n",
+                "df_final = df_features.select(\"features\", target_col)\n",
+                "\n",
+                "print(f\"✅ Feature vector created\")\n",
+                "print(f\"Final dataset: {df_final.count()} rows\")"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Split data\n",
+                "train_data, test_data = df_final.randomSplit([0.7, 0.3], seed=42)\n",
+                "\n",
+                "print(f\"Training data: {train_data.count()} rows\")\n",
+                "print(f\"Test data: {test_data.count()} rows\")\n",
+                "\n",
+                "print(\"\\nTarget distribution in training set:\")\n",
+                "train_data.groupBy(target_col).count().show()"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Initialize and train models\n",
+                "from pyspark.ml.classification import LogisticRegression, RandomForestClassifier, GBTClassifier\n",
+                "from pyspark.ml.evaluation import BinaryClassificationEvaluator, MulticlassClassificationEvaluator\n",
+                "\n",
+                "models = {\n",
+                "    'logistic_regression': LogisticRegression(featuresCol='features', labelCol=target_col),\n",
+                "    'random_forest': RandomForestClassifier(featuresCol='features', labelCol=target_col, numTrees=100),\n",
+                "    'gradient_boosting': GBTClassifier(featuresCol='features', labelCol=target_col, maxIter=100)\n",
+                "}\n",
+                "\n",
+                "# Evaluators\n",
+                "auc_evaluator = BinaryClassificationEvaluator(labelCol=target_col, metricName=\"areaUnderROC\")\n",
+                "accuracy_evaluator = MulticlassClassificationEvaluator(labelCol=target_col, metricName=\"accuracy\")\n",
+                "f1_evaluator = MulticlassClassificationEvaluator(labelCol=target_col, metricName=\"f1\")\n",
+                "\n",
+                "results = []\n",
+                "trained_models = {}\n",
+                "\n",
+                "print(\"🚀 Training models...\")\n",
+                "\n",
+                "for name, model in models.items():\n",
+                "    print(f\"\\nTraining {name}...\")\n",
+                "    try:\n",
+                "        trained_model = model.fit(train_data)\n",
+                "        trained_models[name] = trained_model\n",
+                "        \n",
+                "        # Evaluate\n",
+                "        train_pred = trained_model.transform(train_data)\n",
+                "        test_pred = trained_model.transform(test_data)\n",
+                "        \n",
+                "        result = {\n",
+                "            'Model_Name': name,\n",
+                "            'Train_auc_roc': round(auc_evaluator.evaluate(train_pred), 4),\n",
+                "            'Test_auc_roc': round(auc_evaluator.evaluate(test_pred), 4),\n",
+                "            'Train_Accuracy': round(accuracy_evaluator.evaluate(train_pred), 4),\n",
+                "            'Test_Accuracy': round(accuracy_evaluator.evaluate(test_pred), 4),\n",
+                "            'Train_f1': round(f1_evaluator.evaluate(train_pred), 4),\n",
+                "            'Test_f1': round(f1_evaluator.evaluate(test_pred), 4)\n",
+                "        }\n",
+                "        results.append(result)\n",
+                "        \n",
+                "        print(f\"  ✅ {name} - AUC: {result['Test_auc_roc']}, Accuracy: {result['Test_Accuracy']}\")\n",
+                "        \n",
+                "    except Exception as e:\n",
+                "        print(f\"  ❌ Error training {name}: {e}\")\n",
+                "\n",
+                "print(f\"\\n✅ Training completed!\")"
+            ]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [
+                "# Display and save results\n",
+                "results_df = pd.DataFrame(results)\n",
+                "results_df = results_df.sort_values('Test_auc_roc', ascending=False)\n",
+                "\n",
+                "print(\"📊 Model Performance Summary:\")\n",
+                "print(results_df)\n",
+                "\n",
+                "# Save results\n",
+                "timestamp = datetime.now().strftime(\"%Y%m%d_%H%M%S\")\n",
+                "output_dir = f\"../model/run_{timestamp}\"\n",
+                "os.makedirs(output_dir, exist_ok=True)\n",
+                "\n",
+                "# Save performance\n",
+                "results_path = os.path.join(output_dir, \"model_performance.csv\")\n",
+                "results_df.to_csv(results_path, index=False)\n",
+                "\n",
+                "# Save test data\n",
+                "test_data_path = os.path.join(output_dir, \"test_data.csv\")\n",
+                "test_data.toPandas().to_csv(test_data_path, index=False)\n",
+                "\n",
+                "# Save best model\n",
+                "best_model_name = results_df.iloc[0]['Model_Name']\n",
+                "best_model = trained_models[best_model_name]\n",
+                "best_model_path = os.path.join(output_dir, f\"best_model_{best_model_name}\")\n",
+                "best_model.write().overwrite().save(best_model_path)\n",
+                "\n",
+                "print(f\"\\n💾 Results saved to: {output_dir}\")\n",
+                "print(f\"🏆 Best model: {best_model_name}\")\n",
+                "\n",
+                "spark.stop()"
+            ]
+        }
+    ],
+    "metadata": {
+        "kernelspec": {
+            "display_name": "Python 3",
+            "language": "python",
+            "name": "python3"
+        },
+        "language_info": {
+            "name": "python",
+            "version": "3.11.0"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 4
+}
+
+with open('notebooks/03_Model_Training_and_Evaluation.ipynb', 'w', encoding='utf-8') as f:
+    json.dump(notebook_content, f, indent=2)
+
+print("✅ Notebook created successfully!")
