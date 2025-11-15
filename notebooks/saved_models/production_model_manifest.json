@@ -1,0 +1,16 @@
+{
+  "project": "Hospital Readmission Prediction",
+  "selection_date": "2025-11-15T09:26:58.608458",
+  "primary_model": "XGBoost_Base",
+  "secondary_model": "LightGBM_Tuned",
+  "selection_criteria": [
+    "High accuracy (88%+)",
+    "Stable performance",
+    "Production-ready"
+  ],
+  "models_extracted": [
+    "XGBoost_Base",
+    "LightGBM_Tuned"
+  ],
+  "total_models_available": 10
+}
