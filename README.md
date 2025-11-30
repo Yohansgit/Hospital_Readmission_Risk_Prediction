@@ -1,10 +1,51 @@
 # Diabetic Patient Readmission Risk Prediction
+## 📋A Scalable E2E Solution using PySpark, Databricks, and Power BI
 
-## 📋 Project Overview
-This project developed a machine learning solution to predict diabetic patient readmission risk based on healthcare input data. The implementation leverages **PySpark** for distributed data processing and **Power BI** for interactive visualization and business intelligence.
+In this project, a machine learning solution to predict diabetic patient readmission risk based on healthcare input data was developed. The implementation leverages **PySpark** for distributed data processing and **Power BI** for interactive visualization and business intelligence.
+
+#### 🎥 Part 1: The Project "Trifecta"
+
+| Video Walkthrough (5 min)            | Interactive PCA Visualization      | Public Notebook                  |
+| ------------------------------------ | ---------------------------------- | -------------------------------- |
+| *[Screenshot here]*                  | *[Screenshot here]*                | *[Screenshot here]*              |
+| **[▶ Click Here to Watch the Loom]** | **[✨ Interact with the PCA Plot]** | **[📓 Open the Colab Notebook]** |
+---
+#### 🎯 Part 2: The Project "Trifecta"
+**Fictional Client:** Head of Clinical Operations, 'CityView Health System'
 
 ### 🎯 Business Problem
-The high frequency of unplanned readmissions for diabetic patients within 30 days of discharge drives up healthcare costs, hinders operational efficiency, and serves as a key benchmark for assessing hospital care quality. In the US, preventable readmission costs **$26B+ annually** and our healthcare 30-day readmission rate is **18%**, above the national average.
+The high frequency of unplanned readmissions for diabetic patients within 30 days of discharge drives up healthcare costs, hinders operational efficiency, and serves as a key benchmark for assessing hospital care quality. In the US, preventable readmission costs **$26 billion annually** and our healthcare 30-day readmission rate is **18%**, 3 points above the national average.
+
+**The Solution:** I developed a scalable machine learning pipeline to **predict which diabetic patients are most likely to be readmitted within 30 days**. This tool empowers hospital teams to prioritize high-risk patients for proactive, post-discharge interventions (e.g., follow-up calls, home care visits).
+
+**The Outcome**: The final model (LightGBM) **identifies high-risk patients with 0.72 ROC AUC** (see performance note below). The analysis revealed that readmission risk is shaped by a mix of clinical severity, care transitions, and patient complexity. Key drivers include Discharge Disposition, Time in Hospital, and Metformin adjustments.
+
+### 🎯 Part 3: Technical Architecture (The "How?")
+This section proves the technical rigor and strategic thinking behind the project.
+**1. Project Architecture:**
+
+flowchart TD
+
+    %% Style
+    classDef dim fill:#f2f2f2,stroke:#999,stroke-width:1px;
+    classDef proc fill:#d9ebff,stroke:#1a73e8,stroke-width:1.5px;
+    classDef model fill:#ffe9cc,stroke:#ff9900,stroke-width:1.5px;
+    classDef viz fill:#e8ffe8,stroke:#34a853,stroke-width:1.5px;
+
+    %% Nodes
+    A[Raw Data Source<br/>"Diabetes 130-US Hospitals Dataset"]:::dim
+    B[Databricks<br/>PySpark Ingest & ETL<br/>- Cleaning<br/>- Deduplication<br/>- Null Handling]:::proc
+    C[PySpark Feature Engineering<br/>- Encodings<br/>- Imputation<br/>- Aggregations<br/>- Train/Val/Test Splits]:::proc
+    D[Model Training<br/>LightGBM on Databricks<br/>- Hyperparameter Tuning<br/>- Cross-Validation]:::model
+    E[Model Output<br/>Risk Scores (0–1)<br/>High / Medium / Low Flags]:::model
+    F[Power BI Dashboard<br/>Interactive Risk Stratification<br/>Care Team Insights]:::viz
+
+    %% Connections
+    A --> B --> C --> D --> E --> F
+
+
+
+
 
 Multiple models (logistic regression, tree-based, and SVM) were developed and evaluated on performance metrics (accuracy, precision, recall, F1 score, ROC AUC) and explainability (SHAP and permutation importance).
 
