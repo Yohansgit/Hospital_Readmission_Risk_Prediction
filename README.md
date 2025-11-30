@@ -26,14 +26,17 @@ This section proves the technical rigor and strategic thinking behind the projec
 
 ```mermaid
 flowchart TD
-    A[Raw Data Source<br/>"Diabetes 130-US Hospitals Dataset"]
-    B[Databricks<br/>PySpark Ingest & ETL]
+
+    A[Raw Data Source: Diabetes 130 US Hospitals Dataset]
+    B[Databricks: PySpark Ingest and ETL]
     C[PySpark Feature Engineering]
-    D[Model Training<br/>LightGBM]
-    E[Model Output<br/>Risk Scores + Tiers]
+    D[Model Training: LightGBM]
+    E[Model Output: Risk Scores and Tiers]
     F[Power BI Dashboard]
+
     A --> B --> C --> D --> E --> F
 ```
+
 
 
 
