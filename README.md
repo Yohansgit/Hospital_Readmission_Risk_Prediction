@@ -87,12 +87,12 @@ Non-home discharges (e.g., to a rehab facility or skilled nursing facility) **in
 ![30-Day Readmission Rate](images/metformin_chart.png)      
 
 ## Part 5: Actionable Recommendations (The "Now What?")    
-**For Care Management (The "Users"):**    
-   ➡️**Action:** Use the Power BI dashboard to **stratify all discharging patients** into risk tiers. Enroll all "High-Risk" patients in an automated 48-hour follow-up call system.   
-**For Clinical Leadership (The "Strategists"):**
-   ➡️**Action:** Launch a 'deep-dive' investigation into the **top 3 Discharge Dispositions** driving readmissions to identify gaps in our partner facility network.   
-**For the Data & IT Team (The "Peers"):**   
-   ➡️**Action:** The next step is to move this model from a static CSV to a **live EMR data stream**. The PySpark foundation is already built, allowing for a transition to real-time risk scoring.   
+**For Care Management (The "Users"):**       
+   ➡️**Action:** Use the Power BI dashboard to **stratify all discharging patients** into risk tiers. Enroll all "High-Risk" patients in an automated 48-hour follow-up call system.      
+**For Clinical Leadership (The "Strategists"):**       
+   ➡️**Action:** Launch a 'deep-dive' investigation into the **top 3 Discharge Dispositions** driving readmissions to identify gaps in our partner facility network.       
+**For the Data & IT Team (The "Peers"):**     
+   ➡️**Action:** The next step is to move this model from a static CSV to a **live EMR data stream**. The PySpark foundation is already built, allowing for a transition to real-time risk scoring.     
 
 ##📊 Part 6: Model Performance
 A note on metrics for this imbalanced dataset. The target variable (`readmitted < 30 days`) only represents ~11% of the data. This means a naive model that always predicts "No Readmission" would have 89% accuracy.    
