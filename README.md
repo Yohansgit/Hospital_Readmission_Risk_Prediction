@@ -68,7 +68,7 @@ flowchart TD
 **🔷 Why PySpark on Databricks?** Most such datasets contain over 100,000 patient encounters. A standard single-machine workflow (Pandas) would be slow and inefficient. I chose `PySpark` on `Databricks` to build a robust, scalable, and production-ready ETL pipeline that can handle this volume and be easily adapted to a live, streaming EMR data feed.      
 **🔷 Why Power BI?** The model's output (a risk score) is useless unless it's in the hands of a non-technical clinician. I built an interactive Power BI dashboard to translate the model's complex output into a simple, actionable "High/Medium/Low Risk" flag for doctors and care managers.      
 
-##🔍 Part 4: Insights Deep Dive (The "What Did You Find?")   
+## 🔍 Part 4: Insights Deep Dive (The "What Did You Find?")   
 
 **🏥 Finding 1: `Discharge Disposition` - The Path Home Matters**   
 **Insight:** 
@@ -125,7 +125,7 @@ The primary metric for this business problem is **ROC AUC** (Area Under the Rece
 └── 🔗 requirements.txt  
 
 ## 2. How to Run:
-Download the "Diabetes 130-US hospitals" dataset (instructions in /`data/README.md`).  
+Download the "Diabetes 130-US hospitals" dataset (instructions in /`data/README.md`).   
 Import the PySpark notebooks into your Databricks environment.  
 Run the ETL -> Feature Engineering -> Modeling pipeline sequentially.  
 Open the Power BI file (`Hospital_Readmission_Dashboard.pbix`) to explore the interactive results.   
