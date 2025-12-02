@@ -124,7 +124,7 @@ The primary metric for this business problem is **ROC AUC** (Area Under the Rece
 ├── 🔗 Hospital_Readmission_Dashboard.pbix  
 └── 🔗 requirements.txt  
 
-## 2. How to Run:
+**2. How to Run:**
 Download the "Diabetes 130-US hospitals" dataset (instructions in /`data/README.md`).   
 Import the PySpark notebooks into your Databricks environment.  
 Run the ETL -> Feature Engineering -> Modeling pipeline sequentially.  
