@@ -1,4 +1,14 @@
-# Diabetic Patient Readmission Risk Prediction
+<p align="center">
+  <em>Diabetic Patient Readmission Risk Prediction </em>
+</p>
+
+<!-- Badges -->
+[![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2.2-orange?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![TCGA](https://img.shields.io/badge/TCGA-Data-red?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=)](https://www.cancer.gov/tcga)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
+# Diabetic Patient Readmission Risk Prediction 
 ## 📋A Scalable E2E Solution using PySpark, Databricks, and Power BI
 
 In this project, a machine learning solution to predict diabetic patient readmission risk based on healthcare input data was developed. The implementation leverages **PySpark** for distributed data processing and **Power BI** for interactive visualization and business intelligence.
@@ -10,186 +20,117 @@ In this project, a machine learning solution to predict diabetic patient readmis
 | *[Screenshot here]*                  | *[Screenshot here]*                | *[Screenshot here]*              |
 | **[▶ Click Here to Watch the Loom]** | **[✨ Interact with the PCA Plot]** | **[📓 Open the Colab Notebook]** |
 ---
-#### 🎯 Part 2: The Project "Trifecta"
-**Fictional Client:** Head of Clinical Operations, 'CityView Health System'
+#### 🎯 Part 2: The Executive Summary (The "So What?") 
+**Fictional Client:** Head of Clinical Operations, 'CityView Health System'   
 
-### 🎯 Business Problem
-The high frequency of unplanned readmissions for diabetic patients within 30 days of discharge drives up healthcare costs, hinders operational efficiency, and serves as a key benchmark for assessing hospital care quality. In the US, preventable readmission costs **$26 billion annually** and our healthcare 30-day readmission rate is **18%**, 3 points above the national average.
+**The Problem:**  The high frequency of unplanned readmissions for diabetic patients within 30 days of discharge drives up healthcare costs, hinders operational efficiency, and serves as a key benchmark for assessing hospital care quality. In the US, preventable readmission costs **$26 billion annually**, and our hospital's 30-day readmission rate is **18%**, 3 points above the national average.
 
-**The Solution:** I developed a scalable machine learning pipeline to **predict which diabetic patients are most likely to be readmitted within 30 days**. This tool empowers hospital teams to prioritize high-risk patients for proactive, post-discharge interventions (e.g., follow-up calls, home care visits).
+**The Solution:** I developed a scalable machine learning pipeline to **predict which diabetic patients are most likely to be readmitted within 30 days**. This tool empowers hospital teams to prioritize high-risk patients for proactive, post-discharge interventions (e.g., follow-up calls, home care visits).    
+  
+**📈 The Outcome**: The final model (LightGBM) **identifies high-risk patients with 0.72 ROC AUC** (see performance note below). The analysis revealed that readmission risk is shaped by a mix of clinical severity, care transitions, and patient complexity. Key drivers include `Discharge Disposition`, `Time in Hospital`, and `Metformin adjustments`.
 
-**The Outcome**: The final model (LightGBM) **identifies high-risk patients with 0.72 ROC AUC** (see performance note below). The analysis revealed that readmission risk is shaped by a mix of clinical severity, care transitions, and patient complexity. Key drivers include Discharge Disposition, Time in Hospital, and Metformin adjustments.
-
-### 🎯 Part 3: Technical Architecture (The "How?")
-This section proves the technical rigor and strategic thinking behind the project.
-**1. Project Architecture:**
-
-```mermaid
+### 🎯 Part 3: Technical Architecture (The "How?")    
+  
+**1. Project Architecture:**   
+```mermaid   
 flowchart TD
+    %% ===== High-Level E2E Data Flow with Drift Detection =====
 
-    A[Raw Data Source: Diabetes 130 US Hospitals Dataset]
-    B[Databricks: PySpark Ingest and ETL]
-    C[PySpark Feature Engineering]
-    D[Model Training: LightGBM]
-    E[Model Output: Risk Scores and Tiers]
-    F[Power BI Dashboard]
+    %% --- Nodes ---
+    A[📥 Raw Data Source<br>EHR Diabetes Dataset]:::source
+    B[🛠 ETL & Feature Engineering]:::process
+    C[🔍 Model Selection]:::process
+    D[🤖 Model Training<br>LightGBM]:::model
+    E[🔁 Cross Validation & Hyperparameter Tuning]:::model
+    F{✅ Performance OK?}:::decision
+    G[📊 Prediction Output<br>Yes / No]:::output
+    H[🚀 Deployment & Monitoring]:::monitor
+    I{⚠️ Data Drift Detected?}:::decision
 
+    %% --- Flow Arrows ---
     A --> B --> C --> D --> E --> F
+    F -- "No" --> E
+    F -- "Yes" --> G --> H
+
+    %% Drift loop
+    H --> I
+    I -- "Yes" --> E
+    I -- "No" --> H
+
+    %% --- Node Styles ---
+    classDef source fill:#4CAF50,stroke:#1B5E20,color:#fff;
+    classDef process fill:#29B6F6,stroke:#0277BD,color:#fff;
+    classDef model fill:#FF7043,stroke:#E64A19,color:#fff;
+    classDef decision fill:#FDD835,stroke:#F9A825,color:#000;
+    classDef output fill:#66BB6A,stroke:#2E7D32,color:#fff;
+    classDef monitor fill:#AB47BC,stroke:#6A1B9A,color:#fff;
 ```
+## 2. Strategic Tech Choices:
 
+**🔷 Why PySpark on Databricks?** Most such datasets contain over 100,000 patient encounters. A standard single-machine workflow (Pandas) would be slow and inefficient. I chose PySpark on Databricks to build a robust, scalable, and production-ready ETL pipeline that can handle this volume and be easily adapted to a live, streaming EMR data feed.
+**🔷 Why Power BI?** The model's output (a risk score) is useless unless it's in the hands of a non-technical clinician. I built an interactive Power BI dashboard to translate the model's complex output into a simple, actionable "High/Medium/Low Risk" flag for doctors and care managers.
 
+##🔍 Part 4: Insights Deep Dive (The "What Did You Find?")
 
+**🏥 Finding 1: Discharge Disposition - The Path Home Matters**
+**Insight:**
+Non-home discharges (e.g., to a rehab facility or skilled nursing facility) **increase readmission risk by 2.3x**. This is a critical moment of care transition.
+**Priority Action:** Implement enhanced care coordination and data sharing for patients not being discharged directly to their homes.
+![30-Day Readmission Rate](images/readmission_by_discharge.png)
 
+**⏰ Finding 2: Time in Hospital - The Clock of Severity** 
+**Insight:** Risk increases significantly with length of stay. Stays of **7–10 days increase readmission risk by 60%** compared to shorter stays, indicating higher patient complexity.
+**Priority Action:** Automatically flag patients with stays > 7 days for a mandatory post-discharge consultation with a care specialist.
+![30-Day Readmission Rate](images/time_in_hospital_chart.png)
 
+**🎯 Finding 3: Metformin - A Key Medication Marker**
+**Insight:** Patients who had their **Metformin dosage** changed or were newly prescribed it are **1.8x more likely to be readmitted**. This signals potential issues with medication adherence or diabetes management.
+**Priority Action:** Implement targeted medication counseling and follow-up for any patient whose diabetes medication regimen is altered during their hospital stay.
+![30-Day Readmission Rate](images/metformin_chart.png)
 
+## Part 5: Actionable Recommendations (The "Now What?")
+**For Care Management (The "Users"):**
+**Action:** Use the Power BI dashboard to **stratify all discharging patients** into risk tiers. Enroll all "High-Risk" patients in an automated 48-hour follow-up call system.
 
-Multiple models (logistic regression, tree-based, and SVM) were developed and evaluated on performance metrics (accuracy, precision, recall, F1 score, ROC AUC) and explainability (SHAP and permutation importance).
+**For Clinical Leadership (The "Strategists"):**
+**Action:** Launch a 'deep-dive' investigation into the **top 3 Discharge Dispositions** driving readmissions to identify gaps in our partner facility network.
+**For the Data & IT Team (The "Peers"):**
+**Action:** The next step is to move this model from a static CSV to a **live EMR data stream**. The PySpark foundation is already built, allowing for a transition to real-time risk scoring.
 
-## 🎯 Project Scope
-Predicting which diabetic patients are most likely to be readmitted within 30 days enables proactive care (e.g., follow-up calls, home care visits) and identifies effective treatment strategies.
+##📊 Part 6: Model Performance
+A note on metrics for this imbalanced dataset. The target variable (`readmitted < 30 days`) only represents ~11% of the data. This means a naive model that always predicts "No Readmission" would have 89% accuracy. 
+Therefore, **Accuracy is a misleading metric.**
 
-### Key Objectives:
-- **Pinpoint** key clinical and demographic factors driving high readmission rates
-- **Evaluate** the impact of specific medications and treatment patterns on patient outcomes
-- **Empower** hospital teams to prioritize high-risk patients for early intervention
-- **Deploy** a robust, scalable machine learning pipeline that integrates with existing data infrastructure
+The primary metric for this business problem is **ROC AUC** (Area Under the Receiver Operating Characteristic curve), which measures the model's ability to distinguish between the positive and negative classes.
+🔷**Final Model (LightGBM): ROC AUC 0.72** 
 
-## 📊 Dataset
-The dataset comprises 10 years of clinical records for over 100,000 diabetic patients sourced from the Diabetes 130-US Hospitals dataset.
+## Part 7: Repository & How to Run
+**1. Repository Structure:**
 
-**Dataset Statistics:**
-- **101,766** encounters with **50 features**
-- Covers demographics, treatments, and lab results
+├── 📂 notebooks/
+│   ├── 🔗 01_Data_Ingest_and_ETL_(PySpark).ipynb
+│   ├── 🔗 02_Feature_Engineering_(PySpark).ipynb
+│   ├── 🔗 03_Model_Training_and_Evaluation.ipynb
+│   └── 🔗 04_Insight_Generation_and_Visualization.ipynb
+├── 📂 data/
+│   └── 📄 README.md  (Explains how to download the "Diabetes 100k-US hospitals" dataset)
+├── 📂 images/
+│   ├── 🖼️ trifecta_loom.png
+│   ├── 🖼️ trifecta_dashboard.png
+│   ├── 🖼️ trifecta_notebook.png
+│   ├── 🖼️ architecture_flowchart.png
+│   ├── 🖼️ discharge_disposition_chart.png
+│   ├── 🖼️ time_in_hospital_chart.png
+│   ├── 🖼️ metformin_chart.png
+│   └── 🖼️ roc_curve.png
+├── 🔗 Hospital_Readmission_Dashboard.pbix
+└── 🔗 requirements.txt
 
-### Data Features:
-| Category | Features |
-|----------|----------|
-| **Patient Identifiers** | `encounter_id`, `patient_nbr` |
-| **Patient Demographics** | `race`, `gender`, `age`, `weight`, `payer_code` |
-| **Admission Details** | `admission_source_id`, `admission_type_id`, `discharge_disposition_id` |
-| **Medical History** | `number_outpatient`, `number_inpatient`, `number_emergency` |
-| **Admission Details** | `time_in_hospital`, `number_diagnoses`, `num_lab_procedures`, `num_procedures`, `medical_specialty`, `diag_1`, `diag_2`, `diag_3` |
-| **Clinical Results** | `max_gluc_serum`, `A1cresult` |
-| **Medication Details** | `diabetesMed`, `change`, `num_medications`, +23 medication features |
-| **Target Variable** | `readmitted`: class variable (0 or 1) |
-
-### Sample Data (First 5 rows)
-| encounter_id | patient_nbr | race | gender | age | weight | admission_type_id | discharge_disposition_id | admission_source_id | time_in_hospital | ... | readmitted |
-|--------------|-------------|------|--------|-----|--------|------------------|--------------------------|-------------------|------------------|-----|------------|
-| 2278393 | 8222157 | Caucasian | Female | [0-10) | NULL | 6 | 25 | 1 | 1 | ... | >30 |
-| 149194 | 55629189 | Caucasian | Female | [10-20) | NULL | 1 | 1 | 7 | 3 | ... | >30 |
-| 64495 | 86047875 | AfricanAmerican | Female | [20-30) | NULL | 1 | 1 | 7 | 2 | ... | NO |
-| 500396 | 82442376 | Caucasian | Male | [30-40) | NLL | 1 | 1 | 7 | 2 | ... | NO |
-| 16697 | 42519267 | Caucasian | Male | [40-50) | NULL | 1 | 1 | 7 | 1 | ... | NO |
-
-### Statistical Summary
-| Metric |  time_in_hospital | num_lab_procedures | num_procedures | num_medications | number_outpatient | number_emergency | number_inpatient | number_diagnoses |
-|--------|------------------|-------------------|---------------|----------------|------------------|-----------------|-----------------|-----------------|
-| **Count** |  101,766 | 101,766 | 101,766 | 101,766 | 101,766 | 101,766 | 101,766 | 101,766 |
-| **Mean** |  4.40 | 43.10 | 1.34 | 16.02 | 0.37 | 0.20 | 0.64 | 7.42 |
-| **Std Dev** |  | 2.99 | 19.67 | 1.71 | 8.13 | 1.27 | 0.93 | 1.26 | 1.93 |
-| **Min** |1 | 1 | 0 | 1 | 0 | 0 | 0 | 1 |
-| **Max** | 14 | 132 | 6 | 81 | 42 | 76 | 21 | 16 |
-
-## 🏗️ Model Pipeline
-Data → PySpark ETL → Feature Engineering → Model Training → Explainability → Dashboard
-
-### Pipeline Components:
-1. **Data Processing & ETL** (`01_Data_Ingest_and_ETL_(PySpark).ipynb`)
-   - PySpark for distributed ETL, cleaning, and data transformation
-   - Class imbalance handled by class weighting
-
-2. **Exploratory Data Analysis & Feature Engineering** (`02_EDA_and_Feature_Engineering_(PySpark).ipynb`)
-   - One-hot encoding, scaling, and missing data imputation
-
-3. **Training and Evaluation** (`03_Model_Training_and_Evaluation.ipynb`)
-   - LightGBM_Tuned chosen for prediction based on performance and medical relevance
-
-4. **Reproducibility**
-   - Fully parameterized pipeline for retraining and version control
-
-## 📈 The Outcome
-Final model identifies the **top 10% highest risk patients** with strong predictive performance (`04_Insight_Generation_and_Visualization.ipynb`).
-
-### SHAP Feature Importance
-*What influences predictions most?*
-
-| Feature | SHAP Value | What It Means |
-|---------|------------|---------------|
-| **metformin** | 0.81 | Medication changes signal diabetes management issues |
-| **discharge_disposition_id** | 0.79 | Post-discharge destination impacts readmission |
-| **time_in_hospital** | 0.57 | Longer stays reflect severe conditions |
-| **age** | 0.51 | Older patients more likely to be readmitted |
-| **total_visits** | 0.43 | Frequent hospital use related to chronic instability |
-
-**Overall**: Readmission risk is shaped by a mix of clinical severity, care transitions, and patient complexity.
-
-### Permutation Importance
-*What the model depends on most?*
-
-| Feature | Permutation Importance | Why It Matters |
-|---------|------------------------|----------------|
-| **time_in_hospital** | 0.043 | Removing it hurts performance most → key severity indicator |
-| **total_visits** | 0.034 | High prior usage strongly predicts risk |
-| **age** | 0.031 | Stable demographic predictor |
-| **number_diagnoses** | 0.028 | More conditions = higher chance of readmission |
-| **discharge_disposition_id** | 0.024 | Post-discharge destination strongly influences risk |
-
-## 🔍 Insight Deep Dive
-The model not only predicts readmission but also highlights **why** patients are likely to return. Each driver has a measurable impact on 30-day readmission risk.
-
-### 🎯 Metformin: The Medication Marker
-- **Patients on or adjusting metformin are 1.8x more likely to be readmitted**
-- **Priority Action**: Implement targeted medication counseling
-
-### 🏥 Discharge Disposition: The Path Home
-- **Non-home discharges** (e.g., rehab, SNF) increase readmission risk by **2.3x**
-- **Priority Action**: Enhanced post-discharge care coordination
-
-### ⏰ Time in Hospital: The Clock of Severity
-- Each additional day in hospital **beyond 5 days** increases readmission risk by **10–15%**
-- Stays of **7–10 days** increase risk by **60%**
-- **Priority Action**: Targeted discharge planning for long-stay patients
-
-## 💼 Business Impact
-- **Reduces readmissions** → lower penalties, better care quality
-- **Supports clinicians** with real-time risk flags
-- **Scalable architecture** ready for live EMR integration
-- **Provides explainability** for trustworthy AI in healthcare
-
-## 🛠️ Installation
-
-### Prerequisites
-- Python 3.11
-- Java 17
-- Spark 3.5
-- Pip packages (`requirements.txt`)
-
-### Steps:
-1. Download Diabetes 130-US dataset
-2. Import PySpark notebooks into Databricks
-3. Run ETL → Feature Engineering → Modeling pipeline sequentially
-4. Open Power BI file (`Hospital_Readmission_Dashboard.pbix`) to explore results
-
-## 📊 Model Performance
-| Metric | Value | Description |
-|--------|-------|-------------|
-| **Accuracy** | 0.88 | Percentage of correct predictions |
-| **Precision** | 0.84 | Ratio of true positives to total positive predictions |
-| **Recall** | 0.84 | Ratio of true positives to total actual positives |
-| **F1 Score** | 0.83 | Harmonic mean of Precision and Recall |
-| **ROC AUC** | 0.64 | Area under the ROC curve |
-
-## 📊 Visual Highlights
-- **SHAP summary & bar plot** shows top drivers clearly
-- **Scatter/impact plots** reveal how risk changes with variables like age or length of stay
-- **Readmission distribution visuals** reveal patterns across groups
-
-## 🎯 Project Motivation
-This project was developed to:
-- Build knowledge in machine learning in healthcare domain
-- Gain hands-on experience with model building and interpretation
-- Generate impactful insight and business value
+## 2. How to Run:
+Download the "Diabetes 130-US hospitals" dataset (instructions in /`data/README.md`).
+Import the PySpark notebooks into your Databricks environment.
+Run the ETL -> Feature Engineering -> Modeling pipeline sequentially.
+Open the Power BI file (`Hospital_Readmission_Dashboard.pbix`) to explore the interactive results.
 
 ## 📄 License
 This project is licensed under the **MIT License**.
