@@ -38,23 +38,24 @@ The final model (LightGBM) **identifies high-risk patients with 0.72 ROC AUC** (
 ```mermaid   
 flowchart TD
     %% --- Nodes ---
-    A[📥 Raw Data Source<br>EHR Diabetes Dataset]:::source
-    B[🛠 ETL & Feature Engineering]:::process
-    C[🔍 Model Selection]:::process
-    D[🤖 Model Training<br>LightGBM]:::model
-    E[🔁 Cross Validation & Hyperparameter Tuning]:::model
-    F{✅ Performance OK?}:::decision
-    G[📊 Prediction Output<br>Yes / No]:::output
-    H[🚀 Deployment & Monitoring]:::monitor
-    I{⚠️ Data Drift Detected?}:::decision
+    A[!Define the Probelem]:::source
+    B[📥 Raw Data Source<br>EHR Diabetes Dataset]:::source
+    C[🛠 ETL & Feature Engineering]:::process
+    D[🔍 Model Selection]:::process
+    E[🤖 Model Training<br>LightGBM]:::model
+    F[🔁 Cross Validation & Hyperparameter Tuning]:::model
+    G{✅ Performance OK?}:::decision
+    H[📊 Prediction Output<br>Yes / No]:::output
+    I[🚀 Deployment & Monitoring]:::monitor
+    J{⚠️ Data Drift Detected?}:::decision
     %% --- Flow Arrows ---
-    A --> B --> C --> D --> E --> F
-    F -- "No" --> E
-    F -- "Yes" --> G --> H
+    A --> B --> C --> D --> E --> F-->G
+    G -- "No" --> F
+    G -- "Yes" --> H --> I
     %% Drift loop
-    H --> I
-    I -- "Yes" --> E
-    I -- "No" --> H
+    I --> J
+    J -- "Yes" --> F
+    J -- "No" --> I
     %% --- Node Styles ---
     classDef source fill:#4CAF50,stroke:#1B5E20,color:#fff;
     classDef process fill:#29B6F6,stroke:#0277BD,color:#fff;
