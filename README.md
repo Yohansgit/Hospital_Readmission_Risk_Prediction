@@ -9,18 +9,18 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 # Diabetic Patient Readmission Risk Prediction 
-## 📋A Scalable E2E Solution using PySpark, Databricks, and Power BI
+### 📋A Scalable E2E Solution using PySpark, Databricks, and Power BI
 
 In this project, a machine learning solution to predict diabetic patient readmission risk based on healthcare input data was developed. The implementation leverages **PySpark** for distributed data processing and **Power BI** for interactive visualization and business intelligence.
 
-#### 🎥 Part 1: The Project "Trifecta"
+## 🎥 Part 1: The Project "Trifecta"
 
 | Video Walkthrough (5 min)            | Interactive PCA Visualization      | Public Notebook                  |
 | ------------------------------------ | ---------------------------------- | -------------------------------- |
 | *[Screenshot here]*                  | *[Screenshot here]*                | *[Screenshot here]*              |
 | **[▶ Click Here to Watch the Loom]** | **[✨ Interact with the PCA Plot]** | **[📓 Open the Colab Notebook]** |
 ---
-#### 🚀 Part 2: The Executive Summary (The "So What?")    
+## 🚀 Part 2: The Executive Summary (The "So What?")    
 **Fictional Client:** Head of Clinical Operations, 'CityView Health System'     
 
 **🎯The Problem:**     
@@ -32,9 +32,9 @@ I developed a scalable machine learning pipeline to **predict which diabetic pat
 **📈 The Outcome**:       
 The final model (LightGBM) **identifies high-risk patients with 0.72 ROC AUC** (see performance note below). The analysis revealed that readmission risk is shaped by a mix of clinical severity, care transitions, and patient complexity. Key drivers include `Metformin adjustments`, `Discharge Disposition`, and `Time in Hospital`.    
 
-#### 🚀 Part 3: Technical Architecture (The "How?")      
+## 🚀 Part 3: Technical Architecture (The "How?")      
   
-## 1. Project Architecture:     
+### 1. Project Architecture:     
 ```mermaid   
 flowchart TD
     %% --- Nodes ---
@@ -63,7 +63,7 @@ flowchart TD
     classDef output fill:#66BB6A,stroke:#2E7D32,color:#fff;
     classDef monitor fill:#AB47BC,stroke:#6A1B9A,color:#fff;
 ```
-## 2. Strategic Tech Choices:
+### 2. Strategic Tech Choices:
 
 **🔷 Why PySpark on Databricks?**           
 Most such datasets contain over 100,000 patient encounters. A standard single-machine workflow (Pandas) would be slow and inefficient. I chose `PySpark` on `Databricks` to build a robust, scalable, and production-ready ETL pipeline that can handle this volume and be easily adapted to a live, streaming EMR data feed.      
