@@ -40,7 +40,7 @@ The final model (LightGBM) **identifies high-risk patients with 0.72 ROC AUC** a
 flowchart TD
     %% --- Nodes ---
     A[📝 Define the Problem]:::source
-    B[📥 Ingest Raw Data (CSV/S3)]:::source
+    B["📥 Ingest Raw Data (CSV/S3)"]:::source
     C[🛠 PySpark on Databricks]:::process
     D[🔍 Train/Test Split]:::process
     E[🤖 Distributed Training<br>(Train LightGBM Model)]:::model
