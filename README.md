@@ -5,7 +5,6 @@
 <!-- Badges -->
 [![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.2.2-orange?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
-[![TCGA](https://img.shields.io/badge/TCGA-Data-red?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=)](https://www.cancer.gov/tcga)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 # Diabetic Patient Readmission Risk Prediction 
@@ -15,11 +14,13 @@ In this project, a machine learning solution to predict diabetic patient readmis
 
 ## 🎥 Part 1: The Project "Trifecta"   
 
-| Video Walkthrough (5 min)            | Interactive PCA Visualization      | Public Notebook                  |
-| ------------------------------------ | ---------------------------------- | -------------------------------- |
-| *[Screenshot here]*                  | *[Screenshot here]*                | *[Screenshot here]*              |
-| **[▶ Click Here to Watch the Loom]** | **[✨ Interact with the PCA Plot]** | **[📓 Open the Colab Notebook]** |
+| Video Walkthrough (5 min)            | Interactive Dashboard                 | Public Notebook                  |
+| ------------------------------------ | ----------------------------------    | -------------------------------- |
+|  (images/Coming soon Graphics.png)   |    (images/trifecta_dashboard.png)    | *[Screenshot here]*              |
+| **[▶ Click Here to Watch the Loom]** | **[✨ Interact with the dashboard]** | **[📓 Open the Colab Notebook]** |
 ---
+**Target Audience:** Clinical Operations Leaders & Hiring Managers (Corporate/Health-Tech)
+
 ## 🚀 Part 2: The Executive Summary (The "So What?")    
 **Fictional Client:** Head of Clinical Operations, 'CityView Health System'     
 
@@ -38,9 +39,9 @@ The final model (LightGBM) **identifies high-risk patients with 0.72 ROC AUC** (
 ```mermaid   
 flowchart TD
     %% --- Nodes ---
-    A[📝 Define the Probelem]:::source
+    A[📝 Define the Problem]:::source
     B[📥 Data collection & EDA]:::source
-    C[🛠 Data Wragling]:::process
+    C[🛠 PySpark ETL on Databricks]:::process
     D[🔍 Model Selection]:::process
     E[🤖 Model Training<br>LightGBM]:::model
     F[🔁 Cross Validation & Hyperparameter Tuning]:::model
@@ -84,7 +85,7 @@ Non-home discharges (e.g., to a rehab facility or skilled nursing facility) **in
 **Priority Action:** Implement enhanced care coordination and data sharing for patients not being discharged directly to their homes.    
 📊 [View 30-Day Readmission Chart](images/discharge_disposition_chart.png)            
 
-**⏰ Finding 2: `Time in Hospital` - The Clock of Severity**    
+**⏰ Finding 3: `Time in Hospital` - The Clock of Severity**    
 **Insight:** Risk increases significantly with length of stay. Stays of **7–10 days increase readmission risk by 60%** compared to shorter stays, indicating higher patient complexity.    
 **Priority Action:** Automatically flag patients with stays >7 days for a mandatory post-discharge consultation with a care specialist.     
 📊 [View Time in Hospital Chart](images/time_in_hospital_chart.png)      
