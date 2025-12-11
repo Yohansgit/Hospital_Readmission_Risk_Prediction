@@ -17,7 +17,7 @@ In this project, a machine learning solution to predict diabetic patient readmis
 | Video Walkthrough (5 min)                                                              | Interactive Dashboard                                                 | Public Notebook                  |
 | ------------------------------------                                                   | ----------------------------------                                    | -------------------------------- |
 |                                                                                        |     
-| **[▶ Click here to view the Loom (Diabetic Patient Readmission Risk Prediction.mp4)**  | **[✨ Interact with the dashboard](Hospital_readmission.pdf)**       | **[📓 Data Ingest & ETL](colab-link)**|
+| **[▶ Click here to view the Loom (Diabetic Patient Readmission Risk Prediction.mp4)]**  | **[✨ Interact with the dashboard](Hospital_readmission.pdf)]**       | **[📓 Data Ingest & ETL](colab-link)]**|
 ---
 **Target Audience:** Clinical Operations Leaders & Hiring Managers (Corporate/Health-Tech)
 
