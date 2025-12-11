@@ -86,8 +86,8 @@ Non-home discharges (e.g., to a rehab facility or skilled nursing facility) **in
 📊 ![Discharge_disposition Chart](images/readmission_by_discharge.png)            
 
 **⏰ Finding 3: `Time in Hospital` - The Clock of Severity**    
-**Insight:** Risk increases significantly with length of stay. Stays of **7–10 days increase readmission risk by 60%** compared to shorter stays, indicating higher patient complexity.    
-**Priority Action:** Automatically flag patients with stays >7 days for a mandatory post-discharge consultation with a care specialist.     
+**Insight:** Risk increases significantly with length of stay. Stays of **8–10 days increase readmission risk by 19%** compared to shorter stays, indicating higher patient complexity.    
+**Priority Action:** Automatically flag patients with stays **>8 days** for a mandatory post-discharge consultation with a care specialist.     
 📊 ![Time in Hospital Chart](images/time_in_hospital_chart.png)      
    
 ## Part 5: Actionable Recommendations (The "Now What?")    
