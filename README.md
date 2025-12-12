@@ -19,7 +19,7 @@ In this project, a machine learning solution to predict diabetic patient readmis
 |                                                                |     
 | **[▶ Click here to view](https://streamable.com/qbn9ha)**     | **[✨ Interact with the dashboard](images/Hospital_readmission.pdf)**     | **[📓 Data Ingest & ETL](notebooks/01_Data_Ingest_and_ETL_(PySpark).ipynb)**|
 ---
-**Target Audience:** Clinical Operations Leaders & Hiring Managers (Corporate/Health-Tech)    [Trifecta Dashboard](images/Hospital_readmission.pdf)
+**Target Audience:** Clinical Operations Leaders & Hiring Managers (Corporate/Health-Tech)
 
 ## 🚀 Part 2: The Executive Summary (The "So What?")    
 **Fictional Client:** Head of Clinical Operations, 'CityView Health System'     
