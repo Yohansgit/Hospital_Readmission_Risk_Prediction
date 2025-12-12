@@ -10,7 +10,7 @@
 # Diabetic Patient Readmission Risk Prediction 
 ## 📋A Scalable E2E Solution using PySpark, Databricks, and Power BI
 
-In this project, a machine learning solution to predict diabetic patient readmission risk based on healthcare input data was developed. The implementation leverages **PySpark** for distributed data processing and **Power BI** for interactive visualization and business intelligence.
+In this project, a machine learning solution was developed to predict diabetic patient readmission risk based on healthcare data. The implementation leverages **PySpark** for distributed data processing and **Power BI** for interactive visualization and business intelligence.
 
 ## 🎥 Part 1: The Project "Trifecta"   
 
