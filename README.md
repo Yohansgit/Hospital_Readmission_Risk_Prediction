@@ -17,7 +17,7 @@ In this project, a machine learning solution was developed to predict diabetic p
 | Video Walkthrough (5 min)                                      | Interactive Dashboard                                                     | Public Notebook                  |
 | ------------------------------------                           | ----------------------------------                                        | -------------------------------- |
 |                                                                |     
-| **[▶ Click here to view](https://streamable.com/qbn9ha)**     | **[✨ Interact with the dashboard](images/Hospital_readmission.pdf)**     | **[📓 Data Ingest & ETL](notebooks/01_Data_Ingest_and_ETL_(PySpark).ipynb)**|
+| **[▶ Click Here to Watch the Loom](https://www.loom.com/share/8bf803b4483a4a389c3c94aefa57cd5e)**    | **[✨ Interact with the dashboard](images/Hospital_readmission.pdf)**     | **[📓 Data Ingest & ETL](notebooks/01_Data_Ingest_and_ETL_(PySpark).ipynb)**|
 
 **Target Audience:** Clinical Operations Leaders & Hiring Managers (Corporate/Health-Tech)
 
